@@ -5,6 +5,7 @@
 	let username = '';
 	let name = '';
 	let password = '';
+	let error = null;
 	async function submit(event) {
 		const response = await post(`auth/register`, { username, name, password });
 
@@ -27,7 +28,9 @@
 				<p class="text-xs-center">
 					<a href="/login">Have an account?</a>
 				</p>
-
+				{#if error}
+				<div class="alert alert-danger" role="alert">{error}</div>
+				{/if}
 				<form on:submit|preventDefault={submit}>
 					<fieldset class="form-group">
 						<input class="form-control form-control-lg" type="text" required placeholder="Your Username" bind:value={username}>
