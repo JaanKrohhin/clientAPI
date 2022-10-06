@@ -8,16 +8,15 @@
 	let error = null;
 	async function submit(event) {
 		const response = await post(`auth/register`, { username, name, password });
-
-		if (response.user) {
-			$session.user = response.user;
+		error = response.error;
+		if (response.id) {
 			goto('/');
 		}
 	}
 </script>
 
 <svelte:head>
-	<title>Sign up • Conduit</title>
+	<title>Svelte Reigister</title>
 </svelte:head>
 
 <div class="auth-page">
@@ -29,7 +28,7 @@
 					<a href="/login">Have an account?</a>
 				</p>
 				{#if error}
-				<div class="alert alert-danger" role="alert">{error}</div>
+					<div class="alert alert-danger" role="alert">{error}</div>
 				{/if}
 				<form on:submit|preventDefault={submit}>
 					<fieldset class="form-group">
@@ -39,9 +38,12 @@
 						<input class="form-control form-control-lg" type="text" required placeholder="Name" bind:value={name}>
 					</fieldset><br>
 					<fieldset class="form-group">
-						<input class="form-control form-control-lg" type="password" required placeholder="Password" bind:value={password}>
+						{#if password.length > 1 && password.length < 6}
+							<sup><div class="alert alert-danger" role="alert">Password too short</div></sup>
+						{/if}
+							<input class="form-control form-control-lg" type="password" required placeholder="Password" bind:value={password}>
 					</fieldset><br>
-					<button class="btn btn-lg btn-primary pull-xs-right">
+					<button class="btn btn-lg btn-primary pull-xs-right" disabled="{password.length < 6}">
 						Sign up
 					</button>
 				</form>
